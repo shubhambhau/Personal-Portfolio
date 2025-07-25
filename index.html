@@ -1,238 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Website</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume - Jadhav Shubham</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Your existing resume styles */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            /* Remove original background as galaxy will replace it */
+            /* background: linear-gradient(135deg, #1c1c1c, #383838); */
+            color: #fff;
+            overflow-x: hidden; /* Prevent horizontal scroll for galaxy */
+            position: relative; /* For z-index context */
+        }
 
-    <!-- font awesome cdn link  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+        header {
+            position: fixed; top: 0; width: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+        }
 
-    <!-- custom css file link  -->
-    <link rel="stylesheet" href="css/style.css">
+        .user {
+            display: flex; align-items: center; gap: 1rem;
+        }
 
+        .user img {
+            width: 60px; height: 60px;
+            border-radius: 50%; object-fit: cover;
+            border: 2px solid #00ffcc;
+        }
+
+        .user .name {
+            font-size: 1.2rem; font-weight: 600;
+        }
+
+        .user .post {
+            font-size: 0.9rem; color: #ccc;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        @media(max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 80px; right: 20px;
+                background: rgba(00, 00,00, 0.9);
+                /* Increased blur effect as requested */
+                backdrop-filter: blur(70px); /* Blurry by 70% */
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                padding: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        section {
+            padding: 6rem 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative; /* Ensure sections are above galaxy background */
+            z-index: 1; /* Place content above galaxy */
+        }
+
+        .heading {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .heading span { color: #00ffcc; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            padding: 2rem;
+            margin: 1rem 0;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .home { text-align: center; padding-top: 8rem; }
+        .home h1 span { color: #00ffcc; }
+
+        .btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.6rem 1.2rem;
+            border: none; border-radius: 20px;
+            backdrop-filter: blur(5px);
+            color: #fff; margin-top: 1rem;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .about .row, .contact .row {
+            display: flex; flex-wrap: wrap; gap: 2rem;
+        }
+
+        .info, .counter, .content, form {
+            flex: 1 1 300px;
+        }
+
+        .counter {
+            display: flex; flex-wrap: wrap; gap: 1rem;
+        }
+
+        .counter .box {
+            flex: 1 1 120px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem; border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .counter .box span {
+            display: block;
+            font-size: 2rem;
+            color: #00ffcc;
+        }
+
+        .portfolio .box-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .portfolio img {
+            width: 100%;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio img:hover {
+            transform: scale(1.05);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            backdrop-filter: blur(5px);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #ccc;
+        }
+
+        .top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            z-index: 100; /* Ensure scroll-to-top button is visible */
+        }
+
+        .top:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 1rem;
+            }
+            .home h1 {
+                font-size: 1.5rem;
+            }
+            .home h3 {
+                font-size: 1rem;
+            }
+        }
+
+        /* --- Galaxy Background Styles --- */
+        /* Galaxy background container - fixed to fill the viewport */
+        .galaxy-background {
+            position: fixed; /* Fixed to viewport */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* Radial gradient for a subtle galaxy-like feel */
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -1; /* Place behind all other content */
+        }
+
+        /* Common styling for star fields (layers) */
+        .star-field {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Ensure stars are clipped within their field */
+        }
+
+        /* Individual star styling */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%; /* Make it a perfect circle */
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8); /* Subtle glow */
+        }
+
+        /* Keyframe animations for star movement */
+        /* Layer 1: Slowest movement, largest displacement */
+        @keyframes star-move-slow {
+            0% { transform: translateY(0vh) translateX(0vw); opacity: 0.8; }
+            50% { transform: translateY(100vh) translateX(20vw); opacity: 0.4; }
+            100% { transform: translateY(0vh) translateX(0vw); opacity: 0.8; }
+        }
+
+        /* Layer 2: Medium movement, medium displacement */
+        @keyframes star-move-medium {
+            0% { transform: translateY(0vh) translateX(0vw); opacity: 1; }
+            50% { transform: translateY(70vh) translateX(-15vw); opacity: 0.6; }
+            100% { transform: translateY(0vh) translateX(0vw); opacity: 1; }
+        }
+
+        /* Layer 3: Fastest movement, smallest displacement */
+        @keyframes star-move-fast {
+            0% { transform: translateY(0vh) translateX(0vw); opacity: 0.6; }
+            50% { transform: translateY(50vh) translateX(10vw); opacity: 0.3; }
+            100% { transform: translateY(0vh) translateX(0vw); opacity: 0.6; }
+        }
+    </style>
 </head>
 <body>
-    
-<!-- header section starts  -->
 
-<header>
-    <div class="user">
-        <img src="images/pic1.jpg" alt="">
-        <h3 class="name">Jadhav Shubham</h3>
-        <p class="post">Java Developer</p>
+    <!-- Galaxy background container - placed right after body for full background -->
+    <div class="galaxy-background">
+        <!-- Star fields where stars will be dynamically injected -->
+        <div id="star-field-1" class="star-field"></div>
+        <div id="star-field-2" class="star-field"></div>
+        <div id="star-field-3" class="star-field"></div>
     </div>
 
-    <nav class="navbar">
-        <ul>
-            <li><a href="#home">home</a></li>
-            <li><a href="#about">about</a></li>
-            <li><a href="#education">education</a></li>
-            <li><a href="#portfolio">portfolio</a></li>
-            <li><a href="#contact">contact</a></li>
-        </ul>
-    </nav>
-
-</header>
-
-<!-- header section ends -->
-
-<div id="menu" class="fas fa-bars"></div>
-
-<!-- home section starts  -->
-
-<section class="home" id="home">
-
-    <h3>HI THERE !</h3>
-    <h1>I'M <span>Jadhav Shubham</span></h1>
-    <p>I'm very calm and positive minded person always try to do challenging work . Coding is not my job its my passion.
-    </p>
-    <a href="#about"><button class="btn">about me <i class="fas fa-user"></i></button></a>
-
-</section>
-
-<!-- home section ends -->
-
-<!-- about section starts  -->
-
-<section class="about" id="about">
-
-<h1 class="heading"> <span>about</span> me </h1>
-
-<div class="row">
-
-    <div class="info">
-        <h3> <span> name : </span> Jadhav Shubham </h3>
-        <h3> <span> age : </span> 21 </h3>
-        <h3> <span> qualification : </span> BCA </h3>
-        <h3> <span> post : </span> Java Developer </h3>
-        <h3> <span> language : </span> Marathi </h3>
-        <a href="https://drive.google.com/file/d/1VoKBHA_hBYvepQvs7G3sb_nFxGVsbsg_/view?usp=drivesdk" target="_blank"><button class="btn"> Download CV <i class="fas fa-download"></i> </button></a>
-    </div>
-
-    <div class="counter">
-
-        <div class="box">
-            <span>Fresher</span>
-            <h3>years of experience</h3>
+    <header>
+        <div class="user">
+            <img src="images/pic1.jpg" alt="Profile">
+            <div>
+                <h3 class="name">Jadhav Shubham</h3>
+                <p class="post">Java Developer</p>
+            </div>
         </div>
 
-        <div class="box">
-            <span>4+</span>
-            <h3>projects completed</h3>
+        <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+
+        <nav>
+            <div class="nav-links" id="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#education">Education</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="home" id="home">
+        <h3>HI THERE!</h3>
+        <h1>I'M <span>Jadhav Shubham</span></h1>
+        <p>I'm calm, positive-minded, and seek challenging work. For me, coding is passion, not just a job.</p>
+        <a href="#about"><button class="btn">About Me <i class="fas fa-user"></i></button></a>
+    </section>
+
+    <section class="about" id="about">
+        <h1 class="heading"><span>About</span> Me</h1>
+        <div class="row">
+            <div class="glass-card info">
+                <h3><span>Name:</span> Jadhav Shubham</h3>
+                <h3><span>Age:</span> 24</h3>
+                <h3><span>Qualification:</span> MCA</h3>
+                <h3><span>Position:</span> Java Developer</h3>
+                <h3><span>Language:</span> Marathi/English/Hindi</h3>
+                <a href="https://drive.google.com/file/d/1VoKBHA_hBYvepQvs7G3sb_nFxGVsbsg_/view?usp=drivesdk" target="_blank">
+                    <button class="btn">Download CV <i class="fas fa-download"></i></button>
+                </a>
+            </div>
+            <div class="counter glass-card">
+                <div class="box"><span>1</span><h3>Years Experience</h3></div>
+                <div class="box"><span>8+</span><h3>Projects Completed</h3></div>
+                <div class="box"><span>2+</span><h3>Happy Clients</h3></div>
+                <div class="box"><span>1+</span><h3>Awards Won</h3></div>
+            </div>
         </div>
+    </section>
 
-        <div class="box">
-            <span>0+</span>
-            <h3>happy clients</h3>
+    <!-- education section starts -->
+    <section class="education" id="education">
+        <h1 class="heading">My <span>Education</span></h1>
+        
+        <div class="box-container">
+            
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2017</span>
+                <h3>SSC (10th)</h3>
+                <p>Completed 10th from Gurudeo Samantbhadra Vidya Mandir, Verul with 73%.</p>
+            </div>
+
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2019</span>
+                <h3>HSC (12th)</h3>
+                <p>Completed 12th from Savitribai Phule Mahavidyalaya, Karanjkheda with 59%.</p>
+            </div>
+
+
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2021</span>
+                <h3>Java Development</h3>
+                <p>Completed Java Certification from DIGITIZE IT STATION, Chhatrapati SSambhajinagar with Grade "<strong>A</strong>".</p>
+            </div>
+
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2021</span>
+                <h3>Full Stack Java Development</h3>
+                <p>Completed Full Stack Java Development Master's Program and gained in-depth knowledge of both frontend and backend technologies.</p>
+            </div>
+            
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2022</span>
+                <h3>Bachelor's in Computer Application (BCA)</h3>
+                <p>Graduated from Shivchhatrapati College, Chhatrapati Sambhajinagar with 8.5 CGPA.</p>
+            </div>
+
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2022</span>
+                <h3>Android Application Development</h3>
+                <p>Certified by Shivchhatrapati College, Chhatrapati SSambhajinagar with Grade "<strong>A+</strong>".</p>
+            </div>
+            <div class="glass-card box">
+                <i class="fas fa-graduation-cap"></i>
+                <span>2025</span>
+                <h3>Master of Computer Applications (MCA)</h3>
+                <p>Completed MCA from Dr. Babasaheb Ambedkar Marathwada University, Chhatrapati SSambhajinagar with 8.5 CGPA.</p>
+            </div>
         </div>
+    </section>
 
-        <div class="box">
-            <span>0+</span>
-            <h3>awards won</h3>
+    <!-- education section ends -->
+
+
+    <section class="portfolio" id="portfolio">
+        <h1 class="heading">My <span>Portfolio</span></h1>
+
+        <div class="box-container">
+            <div class="box" onclick="window.location.href='https://projects.shubhamjadhav.in';">
+                <img src="images/gga.jpg" alt="Project Preview">
+            </div>
+
+            <div class="box">
+                <img src="images/lockedme.jpg" alt="">
+            </div>
+
+            <div class="box">
+                <img src="images/sporty shoes.jpg" alt="">
+            </div>
+
+            <div class="box">
+                <img src="images/kitchen story.jpg" alt="">
+            </div>
+
+            <div class="box">
+                <img src="images/online test application.jpg" alt="">
+            </div>
+
+            <div class="box">
+                <img src="images/medicare.jpg" alt="">
+            </div>
         </div>
+    </section>
 
-    </div>
+    <section class="contact" id="contact">
+        <h1 class="heading"><span>Contact</span> Me</h1>
+        <div class="row">
+            <div class="glass-card content">
+                <h3>Contact Info</h3>
+                <div class="info">
+                    <h3><i class="fas fa-envelope"></i><a href="mailto:contact@shubhamjadhav.in" style="color:white; hover:underline; text-decoration:none; margin-left:5px">contact@shubhamjadhav.in</a></h3>
+                    <h3><i class="fas fa-phone"></i><a href="tel:9657325262" style="color:white; hover:underline; text-decoration:none; margin-left:5px">+91 9657325262</a></h3>
+                    <h3><i class="fas fa-map-marker-alt"></i> Verul, Khultabad, Chhatrapati Sambhajinagar - 431102</h3>
+                </div>
+            </div>
+            <form action="https://formspree.io/f/xdkdagbl" method="POST" class="glass-card">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="text" name="subject" placeholder="Subject/Title">
+                <input type="email" name="email" placeholder="Email" required>
+                <textarea name="message" placeholder="Message" rows="5" required></textarea>
+                <button type="submit" class="btn">Send <i class="fas fa-paper-plane"></i></button>
+            </form>
 
-</div>
-
-</section>
-
-<!-- about section ends -->
-
-<!-- education section starts  -->
-
-<section class="education" id="education">
-
-<h1 class="heading"> my <span>education</span> </h1>
-
-<div class="box-container">
-
-    <div class="box">
-        <i class="fas fa-graduation-cap"></i>
-        <span>2017</span>
-        <h3>SSC (10th)</h3>
-        <p>I have completed my 10th from Gurudeo Samantbhadra vidya mandir Verul.<br>I reserved 73 percent in it. </p>
-    </div>
-
-    <div class="box">
-        <i class="fas fa-graduation-cap"></i>
-        <span>2019</span>
-        <h3>HSC (12th)</h3>
-        <p>I have completed my 12th from Savitribai Phule mahavidyalaya Karanjkheda.<br>&<br> reserved 59 percent in it.</p>
-    </div>
-
-    <div class="box">
-        <i class="fas fa-graduation-cap"></i>
-        <span>2022</span>
-        <h3>BCA</h3>
-        <p>I Graduated from Shivchhatrapati College in Bachelor's of Computer Application and reserved 8.5 CGPA</p>
-    </div>
-
-    <div class="box">
-        <i class="fas fa-graduation-cap"></i>
-        <span>2021</span>
-        <h3>Java development</h3>
-        <p>I've completed my Java Certification program from DIGITIZE IT STATION Aurangabad with grade "<strong>A</strong>".</p>
-    </div>
-
-    <div class="box">
-        <i class="fas fa-graduation-cap"></i>
-        <span>2022</span>
-        <h3>Android Application development</h3>
-        <p>I've completed my Android Application development Certification program from Shivchhatrapati College Aurangabad with grade "<strong>A+</strong>".</p>
-    </div>
-
-    <div class="box">
-        <i class="fas fa-graduation-cap"></i>
-        <span>2021</span>
-        <h3>Full Stack Java development</h3>
-        <p>Have gained good exposure to understand various aspects of Full Stack Java
-            Development through Masters Program which has developed a great sense of
-            confidence at a very personal level.</p>
-    </div>
-</div>
-</section>
-
-<!-- education section ends -->
-
-<!-- portfolio section starts  -->
-
-<section class="portfolio" id="portfolio">
-
-<h1 class="heading"> my <span>portfolio</span> </h1>
-
-<div class="box-container">
-
-    <div class="box">
-        <img src="images/portfolio flyaway.jpg" alt="">
-    </div>
-
-    <div class="box">
-        <img src="images/lockedme.jpg" alt="">
-    </div>
-
-    <div class="box">
-        <img src="images/sporty shoes.jpg" alt="">
-    </div>
-
-    <div class="box">
-        <img src="images/kitchen story.jpg" alt="">
-    </div>
-
-    <div class="box">
-        <img src="images/online test application.jpg" alt="">
-    </div>
-
-    <div class="box">
-        <img src="images/medicare.jpg" alt=""> 
-    </div>
-
-</div>
-</section>
-
-<!-- portfolio section ends -->
-
-<!-- contact section starts  -->
-
-<section class="contact" id="contact">
-
-<h1 class="heading"> <span>contact</span> me </h1>
-
-<div class="row">
-    <div class="content">
-        <h3 class="title">contact info</h3>
-        <div class="info">
-            <h3> <i class="fas fa-envelope"></i> www.shubham45591@gmail.com </h3>
-            <h3> <i class="fas fa-phone"></i> 9657325262 </h3>
-            <h3> <i class="fas fa-phone"></i> 0 2437 299059 </h3>
-            <h3> <i class="fas fa-map-marker-alt"></i> Verul, Khultabad Aurangabad - 431102. </h3>
         </div>
-    </div>
-    <form action="">
+    </section>
 
-        <input type="text" placeholder="name" class="box">
-        <input type="email" placeholder="email" class="box">
-        <input type="text" placeholder="project" class="box">
-        <textarea name="" id="" cols="30" rows="10" class="box message" placeholder="message"></textarea>
-        <button type="submit" class="btn"> send <i class="fas fa-paper-plane"></i> </button>
+    <a href="#home" class="top"><i class="fas fa-chevron-up"></i></a>
 
-    </form>
-</div>
-</section>
+    <script>
+        // Existing resume JavaScript
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
 
-<!-- contact section ends -->
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
 
-<!-- scroll top button  -->
+        // Close menu on link click (mobile view)
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
 
-<a href="#home" class="top">
-    <img src="images/scroll-top-img.png" alt="">
-</a>
+        // --- Galaxy Background JavaScript ---
+        // Function to generate stars within a specific star field
+        function generateStars(fieldId, numStars, animationName, minDuration, maxDuration, minSize, maxSize) {
+            const starField = document.getElementById(fieldId);
+            if (!starField) {
+                console.error(`Star field with ID '${fieldId}' not found.`);
+                return;
+            }
 
-<!-- jquery cdn link  -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
 
-<!-- custom js file link  -->
-<script src="js/script.js"></script>
+                // Random position within the viewport
+                const left = Math.random() * 100; // % of viewport width
+                const top = Math.random() * 100;  // % of viewport height
+
+                // Random size for stars
+                const size = Math.random() * (maxSize - minSize) + minSize; // px
+
+                // Random opacity
+                const opacity = Math.random() * (1 - 0.4) + 0.4; // 0.4 to 1.0
+
+                // Random animation duration and delay for variety
+                const duration = Math.random() * (maxDuration - minDuration) + minDuration; // seconds
+                const delay = Math.random() * duration * -1; // Negative delay to start animation at random points
+
+                star.style.cssText = `
+                    left: ${left}vw;
+                    top: ${top}vh;
+                    width: ${size}px;
+                    height: ${size}px;
+                    opacity: ${opacity};
+                    animation: ${animationName} ${duration}s linear ${delay}s infinite alternate; /* Loop back and forth */
+                `;
+                starField.appendChild(star);
+            }
+        }
+
+        // --- Execute star generation when the window loads ---
+        // Combine with existing onload logic if any, or ensure it runs after page load
+        window.addEventListener('load', function() {
+            // Layer 1: Slower, larger stars, more subtle animation
+            generateStars('star-field-1', 30, 'star-move-slow', 80, 150, 1.5, 3.5);
+
+            // Layer 2: Medium speed, medium size stars
+            generateStars('star-field-2', 40, 'star-move-medium', 60, 120, 1, 2.5);
+
+            // Layer 3: Faster, smaller stars, slightly more dynamic
+            generateStars('star-field-3', 50, 'star-move-fast', 40, 90, 0.5, 1.5);
+            
+            // Log the total number of stars created
+            const totalStars = document.querySelectorAll('.star').length;
+            console.log(`Successfully generated ${totalStars} stars.`);
+        });
+    </script>
+
 </body>
 </html>
